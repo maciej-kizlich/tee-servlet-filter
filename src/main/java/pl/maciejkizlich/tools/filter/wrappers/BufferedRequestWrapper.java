@@ -25,7 +25,7 @@ public final class BufferedRequestWrapper extends HttpServletRequestWrapper {
 
 		public BufferedRequestWrapper(HttpServletRequest req) throws IOException {
 			super(req);
-			InputStream is = req.getInputStream();
+			final InputStream is = req.getInputStream();
 			this.baos = new ByteArrayOutputStream();
 			byte buf[] = new byte[1024];
 			int l;
@@ -45,7 +45,7 @@ public final class BufferedRequestWrapper extends HttpServletRequestWrapper {
 		public String getRequestBody() throws IOException {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(this.getInputStream()));
 			String line = null;
-			StringBuilder inputBuffer = new StringBuilder();
+			final StringBuilder inputBuffer = new StringBuilder();
 			do {
 				line = reader.readLine();
 				if (null != line) {

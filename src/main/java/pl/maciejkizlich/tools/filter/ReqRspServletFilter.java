@@ -34,49 +34,26 @@ public class ReqRspServletFilter implements Filter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ReqRspServletFilter.class);
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
-
-	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
 
 		String requestLog = prepareRequest(request);
 		String responseLog = prepareResponse(response);
-		
-		final StringBuilder logMessage = new StringBuilder(ls).append(requestLog).append(responseLog);
-		
+
+		final StringBuilder logMessage = new StringBuilder(ls) //
+				.append(requestLog) //
+				.append(ls) //
+				.append(responseLog) //
+				.append(ls); //
+
 		logger.debug(logMessage.toString());
 
 	}
 
-	private String prepareResponse(ServletResponse response) {
-		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-
-		BufferedResponseWrapper bufferedResponse = new BufferedResponseWrapper(httpServletResponse);
-		
-		final String responseBody = getResponseBody(bufferedResponse);
-
-		final String responseHeaders = getResponseHeaders(bufferedResponse);
-		
-		final StringBuilder responseMessage = new StringBuilder() 
-		.append("[HTTP Response] ") //
-		.append(ls) //
-		.append(responseHeaders) //
-		.append("Response status: " + bufferedResponse.getStatus() + " " + HttpStatus.valueOf(bufferedResponse.getStatus()).getReasonPhrase()) //
-		.append(ls) //
-		.append("Response body: ") //
-		.append(ls) //
-		.append(responseBody)
-		.append(ls); //
-
-		return responseMessage.toString();
-	}
-
 	private String prepareRequest(ServletRequest request) throws IOException {
-	
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		BufferedRequestWrapper bufferedReqest = new BufferedRequestWrapper(httpServletRequest);
-		
+
+		final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		final BufferedRequestWrapper bufferedReqest = new BufferedRequestWrapper(httpServletRequest);
+
 		final String headers = getRequestHeaders(httpServletRequest);
 
 		final String requestBody = getRequestBody(bufferedReqest);
@@ -90,11 +67,31 @@ public class ReqRspServletFilter implements Filter {
 				.append(ls) //
 				.append(headers) //
 				.append("Content: " + requestBody) //
-				.append(ls) //
 				.append(ls); //
-		
+
 		return requestMessage.toString();
-		
+
+	}
+
+	private String prepareResponse(ServletResponse response) {
+
+		final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		final BufferedResponseWrapper bufferedResponse = new BufferedResponseWrapper(httpServletResponse);
+
+		final String responseBody = getResponseBody(bufferedResponse);
+
+		final String responseHeaders = getResponseHeaders(bufferedResponse);
+
+		final StringBuilder responseMessage = new StringBuilder().append("[HTTP Response] ") //
+				.append(ls) //
+				.append(responseHeaders) //
+				.append("Response status: " + bufferedResponse.getStatus() + " " + HttpStatus.valueOf(bufferedResponse.getStatus()).getReasonPhrase()) //
+				.append(ls) //
+				.append("Response body: ") //
+				.append(ls) //
+				.append(responseBody);
+
+		return responseMessage.toString();
 	}
 
 	private String getResponseHeaders(BufferedResponseWrapper bufferedResponse) {
@@ -124,7 +121,7 @@ public class ReqRspServletFilter implements Filter {
 				return getXmlResponseBody(content);
 			}
 		}
-		
+
 		return bufferedResponse.getContent().isEmpty() ? "---" : bufferedResponse.getContent();
 	}
 
@@ -149,7 +146,6 @@ public class ReqRspServletFilter implements Filter {
 
 	private String getRequestBody(BufferedRequestWrapper bufferedReqest) throws IOException {
 		String requestBody = bufferedReqest.getRequestBody();
-
 		return requestBody.isEmpty() ? "---" : requestBody;
 	}
 
@@ -166,6 +162,10 @@ public class ReqRspServletFilter implements Filter {
 					.append(ls); //
 		}
 		return headers.toString();
+	}
+	
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
 	@Override
