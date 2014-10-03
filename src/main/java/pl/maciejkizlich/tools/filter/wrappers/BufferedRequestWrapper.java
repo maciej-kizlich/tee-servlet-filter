@@ -42,7 +42,7 @@ public final class BufferedRequestWrapper extends HttpServletRequestWrapper {
 			return this.bsis;
 		}
 
-		String getRequestBody() throws IOException {
+		public String getRequestBody() throws IOException {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(this.getInputStream()));
 			String line = null;
 			StringBuilder inputBuffer = new StringBuilder();
