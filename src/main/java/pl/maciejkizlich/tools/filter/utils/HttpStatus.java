@@ -1,4 +1,4 @@
-package pl.maciejkizlich.tools.filter;
+package pl.maciejkizlich.tools.filter.utils;
 
 public enum HttpStatus {
 

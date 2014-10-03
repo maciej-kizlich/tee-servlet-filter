@@ -1,4 +1,4 @@
-package pl.maciejkizlich.tools.filter;
+package pl.maciejkizlich.tools.filter.wrappers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
+import pl.maciejkizlich.tools.filter.streams.TeeServletOutputStream;
 
 public class BufferedResponseWrapper extends HttpServletResponseWrapper {
 

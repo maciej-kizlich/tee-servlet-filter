@@ -1,4 +1,4 @@
-package pl.maciejkizlich.tools.filter;
+package pl.maciejkizlich.tools.filter.streams;
 
 import java.io.IOException;
 import java.io.OutputStream;

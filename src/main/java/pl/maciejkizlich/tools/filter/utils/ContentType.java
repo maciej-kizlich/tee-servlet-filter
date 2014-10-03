@@ -1,4 +1,4 @@
-package pl.maciejkizlich.tools.filter;
+package pl.maciejkizlich.tools.filter.utils;
 
 import java.io.Serializable;
 

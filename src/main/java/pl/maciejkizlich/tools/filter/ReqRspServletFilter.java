@@ -16,6 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+import pl.maciejkizlich.tools.filter.utils.ContentType;
+import pl.maciejkizlich.tools.filter.utils.HttpStatus;
+import pl.maciejkizlich.tools.filter.wrappers.BufferedRequestWrapper;
+import pl.maciejkizlich.tools.filter.wrappers.BufferedResponseWrapper;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -33,19 +38,50 @@ public class ReqRspServletFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
 
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		String requestLog = prepareRequest(request);
+		String responseLog = prepareResponse(response);
+		
+		final StringBuilder logMessage = new StringBuilder(ls).append(requestLog).append(responseLog);
+		
+		logger.debug(logMessage.toString());
+
+	}
+
+	private String prepareResponse(ServletResponse response) {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-		BufferedRequestWrapper bufferedReqest = new BufferedRequestWrapper(httpServletRequest);
 		BufferedResponseWrapper bufferedResponse = new BufferedResponseWrapper(httpServletResponse);
+		
+		final String responseBody = getResponseBody(bufferedResponse);
 
+		final String responseHeaders = getResponseHeaders(bufferedResponse);
+		
+		final StringBuilder responseMessage = new StringBuilder() 
+		.append("[HTTP Response] ") //
+		.append(ls) //
+		.append(responseHeaders) //
+		.append("Response status: " + bufferedResponse.getStatus() + " " + HttpStatus.valueOf(bufferedResponse.getStatus()).getReasonPhrase()) //
+		.append(ls) //
+		.append("Response body: ") //
+		.append(ls) //
+		.append(responseBody)
+		.append(ls); //
+
+		return responseMessage.toString();
+	}
+
+	private String prepareRequest(ServletRequest request) throws IOException {
+	
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		BufferedRequestWrapper bufferedReqest = new BufferedRequestWrapper(httpServletRequest);
+		
 		final String headers = getRequestHeaders(httpServletRequest);
 
 		final String requestBody = getRequestBody(bufferedReqest);
 
-		final StringBuilder logMessage = new StringBuilder(ls) //
+		final StringBuilder requestMessage = new StringBuilder(ls) //
 				.append("[sessionId = " + httpServletRequest.getSession().getId() + "]") //
 				.append(" ") //
 				.append("[HTTP Request] ") //
@@ -56,25 +92,9 @@ public class ReqRspServletFilter implements Filter {
 				.append("Content: " + requestBody) //
 				.append(ls) //
 				.append(ls); //
-
-		chain.doFilter(bufferedReqest, bufferedResponse);
-
-		final String responseBody = getResponseBody(bufferedResponse);
-
-		final String responseHeaders = getResponseHeaders(bufferedResponse);
-
-		logMessage.append("[HTTP Response] ") //
-				.append(ls) //
-				.append(responseHeaders) //
-				.append("Response status: " + bufferedResponse.getStatus() + " " + HttpStatus.valueOf(bufferedResponse.getStatus()).getReasonPhrase()) //
-				.append(ls) //
-				.append("Response body: ") //
-				.append(ls) //
-				.append(responseBody)
-				.append(ls); //
-
-		logger.debug(logMessage.toString());
-
+		
+		return requestMessage.toString();
+		
 	}
 
 	private String getResponseHeaders(BufferedResponseWrapper bufferedResponse) {

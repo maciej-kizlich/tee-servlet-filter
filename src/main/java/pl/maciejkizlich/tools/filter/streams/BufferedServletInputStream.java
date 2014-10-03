@@ -1,10 +1,10 @@
-package pl.maciejkizlich.tools.filter;
+package pl.maciejkizlich.tools.filter.streams;
 
 import java.io.ByteArrayInputStream;
 
 import javax.servlet.ServletInputStream;
 
-	final class BufferedServletInputStream extends ServletInputStream {
+	public final class BufferedServletInputStream extends ServletInputStream {
 
 		private ByteArrayInputStream byteArrayInputStream;
 

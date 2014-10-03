@@ -1,4 +1,4 @@
-package pl.maciejkizlich.tools.filter;
+package pl.maciejkizlich.tools.filter.wrappers;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -11,7 +11,9 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-final class BufferedRequestWrapper extends HttpServletRequestWrapper {
+import pl.maciejkizlich.tools.filter.streams.BufferedServletInputStream;
+
+public final class BufferedRequestWrapper extends HttpServletRequestWrapper {
 
 		private ByteArrayInputStream bais = null;
 		
